@@ -32,7 +32,7 @@ export class AppComponent {
 
   sow(pitId?: number) {
     if (this.game?.id != null && this.isGameActive() && pitId != null) {
-      this.gameService.sow(this.game?.id, pitId)
+      this.gameService.sow(this.game.id, pitId)
         .subscribe({
           next: data => {
             this.game = {
