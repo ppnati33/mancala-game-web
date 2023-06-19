@@ -1,22 +1,23 @@
 import {Component} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
 import {Game} from "./model/game";
 import {Status} from "./model/status";
+import {GameService} from "./service/game.service";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.less']
+  styleUrls: ['./app.component.less'],
+  providers: [GameService]
 })
 export class AppComponent {
   title: String = 'Mancala Game';
   game?: Game;
 
-  constructor(private http: HttpClient) {
+  constructor(private gameService: GameService) {
   }
 
   startNewGame() {
-    this.http.post<any>('http://localhost:8080/games', "{}")
+    this.gameService.startNewGame()
       .subscribe((data) => {
         this.game = {
           id: data.id,
@@ -30,8 +31,8 @@ export class AppComponent {
   }
 
   sow(pitId?: number) {
-    if (pitId != null && this.isGameActive()) {
-      this.http.put<any>('http://localhost:8080/games/' + this.game?.id + '/pits/' + pitId, "{}")
+    if (this.game?.id != null && this.isGameActive() && pitId != null) {
+      this.gameService.sow(this.game?.id, pitId)
         .subscribe({
           next: data => {
             this.game = {
